@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home</title>
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        $(function() {
+            var socket = io.connect(window.location.href);
+
+            socket.on('message:server', function(data) {
+                $('#messageList').append('<li>' + data.message + ' received' + '</li>');
+            });
+
+           
+            $("#form").on('submit', function(e) {
+                e.preventDefault();
+                var $input = $('[name="messageInput"]'); 
+                var message = $input.val();
+                if(message){
+                    socket.emit('message:client', {message: message});
+                }
+                $('#messageList').append('<li>' + message + ' sent' + '</li>');
+            })
+              
+            });
+         
+    
+    </script>
+</head>
+<body style="align-content: center">
+    <h1 style="color:blue">Chat Application</h1>
+    
+    <form id="form" method="post"> 
+        <input type="text" name="messageInput" placeholder="Enter message">
+        <button type="submit">Send</button>
+    </form>
+    <ul id="messageList"></ul>
+
+   
+</body>
+</html>
